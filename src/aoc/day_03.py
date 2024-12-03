@@ -1,70 +1,36 @@
 from typing import TextIO
+import re
 
 
 def part_01(input: TextIO) -> int:
-    def parse_line(line: str) -> int:
-        total = 0
-        for i in range(len(line)):
-            if not line[0 + i : 4 + i] == "mul(":
-                continue
-
-            # 15 is arbitrary for max length of a mul segment
-            next_comma = line[i : i + 15].find(",")
-            if next_comma == -1:
-                continue
-
-            next_bracket = line[i : i + 15].find(")")
-            if next_bracket == -1:
-                continue
-
-            try:
-                x, y = line[i + 4 : i + next_bracket].split(",")
-                total += int(x) * int(y)
-            except:
-                continue
-
-        return total
-
-    return parse_line("".join([line.strip() for line in input.readlines()]))
+    values = re.findall(
+        r"mul\((\d+),(\d+)\)",
+        "".join([line.strip() for line in input.readlines()]),
+    )
+    assert values is not None
+    return sum(map(lambda x: int(x[0]) * int(x[1]), values))
 
 
 def part_02(input: TextIO) -> int:
+    values = re.findall(
+        r"mul\(\d+,\d+\)|do\(\)|don\'t\(\)",
+        "".join([line.strip() for line in input.readlines()]),
+    )
 
-    def parse_line(line: str) -> int:
-        total = 0
-        activated = True
-        for i in range(len(line)):
-            if line[i: i + 5] == "don't":
-                activated = False
-                # print(i, " Dectivated")
+
+    total = 0
+    active = True
+    for value in values:
+        if value == "don't()":
+            active = False
+        elif value == "do()":
+            active = True
+        else:
+            if not active:
                 continue
+            x, y = value[4:-1].split(",")
+            total += int(x) * int(y)
 
-            if line [i: i + 2] == "do":
-                activated = True
-                # print(i, " Activated")
-                continue
+    return total
 
-            if not activated:
-                continue
 
-            if not line[i : i + 4] == "mul(":
-                continue
-
-            # 15 is arbitrary for max length of a mul segment
-            next_comma = line[i : i + 15].find(",")
-            if next_comma == -1:
-                continue
-
-            next_bracket = line[i : i + 15].find(")")
-            if next_bracket == -1:
-                continue
-
-            try:
-                x, y = line[i + 4 : i + next_bracket].split(",")
-                total += int(x) * int(y)
-            except:
-                continue
-
-        return total
-
-    return parse_line("".join([line.strip() for line in input.readlines()]))
