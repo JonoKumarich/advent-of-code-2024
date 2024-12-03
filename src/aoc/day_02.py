@@ -1,4 +1,5 @@
 from itertools import pairwise
+from typing import TextIO
 
 def diff_parser(report: list[str]) -> bool:
 
@@ -20,10 +21,10 @@ def diff_parser(report: list[str]) -> bool:
 
     return True
 
-def part_01(input: list[str]) -> int:
+def part_01(input: TextIO) -> int:
 
     total = 0
-    for report in input:
+    for report in input.readlines():
         if diff_parser(report.split()):
             total += 1
 
@@ -31,9 +32,9 @@ def part_01(input: list[str]) -> int:
 
 
 # Very inefficient - but works quickly given small input
-def part_02(input: list[str]) -> int:
+def part_02(input: TextIO) -> int:
     total = 0
-    for report in input:
+    for report in input.readlines():
         levels = report.split()
         for n in range(len(levels)):
             tmp = levels.copy()

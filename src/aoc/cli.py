@@ -21,10 +21,10 @@ def calculate_answer(answer_type: Literal["test", "main"], day: int, part: int) 
     day_str = f"day_{str(day).zfill(2)}"
     part_str = f"part_{str(part).zfill(2)}"
     with open(Path(__file__).parents[2] / f"inputs/{answer_type}" / f"{day_str}.txt") as f:
-        lines = f.readlines()
+        func = import_module(f'aoc.{day_str}').__dict__[part_str]
+        result = func(f)
 
-    func = import_module(f'aoc.{day_str}').__dict__[part_str]
-    return func(lines)
+    return result
 
 
 def main():
