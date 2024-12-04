@@ -2,32 +2,6 @@ from typing import TextIO
 from itertools import product
 
 
-# def part_01(input: TextIO) -> int:
-#     lines = [list(line.strip()) for line in input.readlines()]
-#     n_rows = len(lines)
-#     n_cols = len(lines[0])
-#     n_diagonals = n_rows + n_cols -1
-#
-#     total = 0
-#
-#     for x in range(n_rows):
-#         row = lines[x]
-#         total += row.count("XMAS")
-#         total += row.count("SAMX")
-#
-#     for y in range(n_cols):
-#         column = "".join([line[y] for line in lines])
-#         total += column.count("XMAS")
-#         total += column.count("SAMX")
-#
-#     for n in range(n_diagonals):
-#         values = []
-#         for i in range(min(n, n_rows)):
-#
-#
-#     return total
-
-
 def part_01(input: TextIO) -> int:
     lines = [list(line.strip()) for line in input.readlines()]
     n_rows = len(lines)
