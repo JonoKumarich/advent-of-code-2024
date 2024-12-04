@@ -17,7 +17,6 @@ def part_02(input: TextIO) -> int:
         "".join([line.strip() for line in input.readlines()]),
     )
 
-
     total = 0
     active = True
     for value in values:
@@ -32,5 +31,3 @@ def part_02(input: TextIO) -> int:
             total += int(x) * int(y)
 
     return total
-
-
