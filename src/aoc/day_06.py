@@ -1,5 +1,4 @@
 from typing import TextIO
-from itertools import product
 from copy import deepcopy
 
 
@@ -18,9 +17,8 @@ def find_start(grid: list[list[str]]) -> tuple[int, int]:
     raise ValueError("Start not found")
 
 
-def part_01(input: TextIO) -> int:
-    grid = [list(line.strip()) for line in input.readlines()]
-    current = find_start(grid)
+def get_visited(grid: list[list[str]], start: tuple[int, int]) -> set[tuple[int, int]]:
+    current = start
     col_size = len(grid)
     row_size = len(grid[0])
 
@@ -62,10 +60,18 @@ def part_01(input: TextIO) -> int:
 
         next_move = (current[0] + direction[0], current[1] + direction[1])
 
-    return len(visited)
+    return visited
 
 
-def is_loop(grid: list[list[str]], current: tuple[int, int], direction: tuple[int, int]) -> bool:
+def part_01(input: TextIO) -> int:
+    grid = [list(line.strip()) for line in input.readlines()]
+    current = find_start(deepcopy(grid))
+    return len(get_visited(grid, current))
+
+
+def is_loop(
+    grid: list[list[str]], current: tuple[int, int], direction: tuple[int, int]
+) -> bool:
     col_size = len(grid)
     row_size = len(grid[0])
     visited = set()
@@ -101,11 +107,11 @@ def is_loop(grid: list[list[str]], current: tuple[int, int], direction: tuple[in
 
         next_move = (current[0] + direction[0], current[1] + direction[1])
 
+
 def part_02(input: TextIO) -> int:
     grid = [list(line.strip()) for line in input.readlines()]
-    current = find_start(grid)
-    col_size = len(grid)
-    row_size = len(grid[0])
+    current = find_start(deepcopy(grid))
+    visited = get_visited(deepcopy(grid), current)
 
     direction = {
         "v": (1, 0),
@@ -113,13 +119,14 @@ def part_02(input: TextIO) -> int:
         "<": (0, -1),
         "^": (-1, 0),
     }[grid[current[0]][current[1]]]
+
     grid[current[0]][current[1]] = "."
 
     loops = 0
-    for r, c in  product(range(col_size), range(row_size)):
-        if grid[r][c] == '.':
+    for r, c in visited:
+        if grid[r][c] == ".":
             new_grid = deepcopy(grid)
-            new_grid[r][c] = '#'
+            new_grid[r][c] = "#"
 
             if is_loop(new_grid, current, direction):
                 loops += 1
