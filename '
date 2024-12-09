@@ -1,0 +1,35 @@
+from typing import TextIO
+
+
+def part_01(input: TextIO) -> int:
+    sequence = []
+
+    for n, char in enumerate(input.read().strip()):
+        sequence.extend([int(n / 2) if n % 2 == 0 else None for _ in range(int(char))])
+
+    num_nulls = sequence.count(None)
+
+    for n, val in enumerate(reversed(sequence)):
+        if n >= num_nulls:
+            break
+
+        if val is None:
+            continue
+
+        sequence[sequence.index(None)] = val
+        sequence[len(sequence) - n - 1] = None
+
+    total = 0
+    for i, num in enumerate(sequence):
+        if num is None:
+            break
+        total += i * num
+
+    return total
+
+
+def part_02(input: TextIO) -> int:
+
+    # 00...111...2...333.44.5555.6666.777.888899
+    # (2, 0, 0), (3, ., 2), (3, 1, 5)
+    pass
