@@ -1,6 +1,5 @@
 from collections import namedtuple
 from typing import TextIO
-from tqdm import tqdm
 
 
 def part_01(input: TextIO) -> int:
@@ -41,18 +40,20 @@ def part_02(input: TextIO) -> int:
         else:
             sequence.append(Block(int(char), None))
 
-    for block in tqdm(list(reversed(sequence))):
+    for block in list(reversed(sequence)):
         if block.index is None:
             continue
 
         for match in sequence:
-            n = list(reversed(sequence)).index(block)
-            i = sequence.index(match)
             if match.index is not None or match.size == 0:
                 continue
 
             if match.size < block.size:
                 continue
+
+            # Yuck, but runs quickly ish
+            n = list(reversed(sequence)).index(block)
+            i = sequence.index(match)
 
             if i >= len(sequence) - n - 1:
                 break
@@ -93,5 +94,3 @@ def repartition_block(current: Block, incoming: Block) -> list[Block]:
     extra = Block(current.size - incoming.size, None)
     return [incoming, extra]
 
-    # (2, 9)
-    # (3, None)
