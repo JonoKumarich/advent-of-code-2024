@@ -1,6 +1,0 @@
-from typing import TextIO
-
-
-def part_01(input: TextIO) -> int:
-    grid = [line.split() for line in input.readlines()]
-    print(grid)
