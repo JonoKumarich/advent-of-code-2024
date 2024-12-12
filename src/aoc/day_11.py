@@ -1,34 +1,38 @@
-# from collections import deque
+from functools import lru_cache
 from typing import TextIO
 
 
 def part_01(input: TextIO) -> int:
-    stones = list(map(int, input.read().strip().split()))
+    stones = map(int, input.read().strip().split())
 
-    for _ in range(25):
-        stones = blink(stones)
-
-    return len(stones)
-
-
-def blink(stones: list[int]) -> list[int]:
-    new_stones = stones.copy()
-    i = 0
+    total = 0
     for stone in stones:
-        if stone == 0:
-            new_stones[i] = 1
-        elif (stone_len := len(str(stone))) % 2 == 0:
-            new_stones.pop(i)
-            new_stones.insert(i, int(str(stone)[: int(stone_len / 2)]))
-            new_stones.insert(i + 1, int(str(stone)[int(stone_len / 2) :]))
-            i += 1
-        else:
-            new_stones[i] = new_stones[i] * 2024
+        total += blink_stone(stone, 25)
 
-        i += 1
+    return total
 
-    return new_stones
+@lru_cache
+def blink_stone(stone: int, n_times: int) -> int:
+    print(stone, n_times)
+    if n_times == 0:
+        return 1
+
+    if stone == 0:
+        return blink_stone(1, n_times - 1)
+
+    elif (stone_len := len(str(stone))) % 2 == 0:
+        return blink_stone(
+            int(str(stone)[: int(stone_len / 2)]), n_times - 1
+        ) + blink_stone(int(str(stone)[int(stone_len / 2) :]), n_times - 1)
+    else:
+        return blink_stone(stone * 2024, n_times - 1)
 
 
 def part_02(input: TextIO) -> int:
-    pass
+    stones = map(int, input.read().strip().split())
+
+    total = 0
+    for stone in stones:
+        total += blink_stone(stone, 25)
+
+    return total
