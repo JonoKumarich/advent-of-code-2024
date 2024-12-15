@@ -69,6 +69,7 @@ def find_direct_neighbours(
 
     return neighbours
 
+
 def part_02(input: TextIO) -> int:
     grid = [list(line.strip()) for line in input.readlines()]
 
@@ -81,13 +82,48 @@ def part_02(input: TextIO) -> int:
         neighbours = find_all_neighbours(grid, (m, n))
         visited.update(neighbours)
         area = len(neighbours)
-        perimiter = calculate_perimiter(grid, neighbours)
-        total += area * perimiter
+        corners = find_total_corners(neighbours)
+        total += area * corners
 
     return total
 
-def calculate_num_sides(grid: list[list[str]], segment: set[tuple[int, int]]) -> int:
-    # Calculate num sides of outer edge
-    # Find all blocks inside of shape
-    # Calculate num sides for each of those blocks
-    pass
+
+def find_total_corners(
+    possible: set[tuple[int, int]],
+) -> int:
+    corners = 0
+    for square in possible:
+        verticals = {(square[0] - 1, square[1]), (square[0], square[1] - 1)}
+        diagonal = (square[0] - 1, square[1] - 1)
+        corners += num_corners(possible, verticals, diagonal)
+
+        verticals = {(square[0] - 1, square[1]), (square[0], square[1] + 1)}
+        diagonal = (square[0] - 1, square[1] + 1)
+        corners += num_corners(possible, verticals, diagonal)
+
+
+        verticals = {(square[0] + 1, square[1]), (square[0], square[1] + 1)}
+        diagonal = (square[0] + 1, square[1] + 1)
+        corners += num_corners(possible, verticals, diagonal)
+
+        verticals = {(square[0] + 1, square[1]), (square[0], square[1] - 1)}
+        diagonal = (square[0] + 1, square[1] - 1)
+        corners += num_corners(possible, verticals, diagonal)
+
+
+    return corners
+
+
+def num_corners(
+    possible: set[tuple[int, int]],
+    verticals: set[tuple[int, int]],
+    diagonal: tuple[int, int],
+) -> int:
+    num_verticals = len(set(v for v in verticals if v in possible))
+
+    if num_verticals == 0:
+        return 1
+    elif num_verticals == 2 and diagonal not in possible:
+        return 1
+    else:
+        return 0
